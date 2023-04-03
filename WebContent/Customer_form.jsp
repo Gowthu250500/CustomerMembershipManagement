@@ -23,7 +23,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="Customer_list">customer</a>
+          <a class="nav-link active" aria-current="page" href="table">customer</a>
         </li>
       </ul>
     </div>

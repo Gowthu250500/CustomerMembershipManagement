@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.techpalle.dao.AdminDao;
 import com.techpalle.dao.CustomerDao;
+import com.techpalle.model.Admin;
 import com.techpalle.model.Customer;
 
 
@@ -40,28 +42,75 @@ public class CustomerController extends HttpServlet {
 		case "/insert":
 			insertCustomer(request, response);
 			break;
-			
+		case"/list":
+			validateAdmin(request, response);
+			break;
+		case"/table":
+			getCustomerListPage(request, response);
+			break;
 			default:
 				getStartUpPage(request, response);
 				break;
 		}
 	}
 
-	
+	private void getCustomerListPage(HttpServletRequest request, HttpServletResponse response)
+	{
+		try 
+		{
+			ArrayList<Customer> alCustomer = CustomerDao.getAllCustomers();
+			
+			RequestDispatcher rd = request.getRequestDispatcher("Customer_list.jsp");
+			request.setAttribute("al", alCustomer);
+			rd.forward(request, response);
+		} 
+		catch (ServletException e) 
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+
+	private void validateAdmin(HttpServletRequest request, HttpServletResponse response) 
+	{
+		String u = request.getParameter("tbUserName");
+		String p = request.getParameter("tbPass");
+		
+		boolean res = AdminDao.validateAdmin(u, p);
+		
+		if(res)
+		{
+			getCustomerListPage(request, response);
+		}
+		else
+		{
+			try 
+			{
+				response.sendRedirect(request.getContextPath()+"/default");
+			}
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+
+
+
 	private void deleteCustomer(HttpServletRequest request, HttpServletResponse response) 
 	{
 		int i = Integer.parseInt(request.getParameter("id"));
 		
 		CustomerDao.deleteCustomer(i);
 		
-		try 
-		{
-			response.sendRedirect("list");
-		} 
-		catch (IOException e1) 
-		{
-			e1.printStackTrace();
-		}
+		getCustomerListPage(request, response);
+
 	}
 
 
@@ -76,14 +125,7 @@ public class CustomerController extends HttpServlet {
 		
 		CustomerDao.updateCustomer(c);
 		
-		try 
-		{
-			response.sendRedirect("list");
-		} 
-		catch (IOException e1) 
-		{
-			e1.printStackTrace();
-		}
+		getCustomerListPage(request, response);
 	}
 
 
@@ -136,8 +178,7 @@ public class CustomerController extends HttpServlet {
 		
 		CustomerDao.insertCustomer(c);
 		
-		getStartUpPage(request, response);
-
+		getCustomerListPage(request, response);
 	}
 
 
@@ -145,11 +186,8 @@ public class CustomerController extends HttpServlet {
 	{
 		try 
 		{
-			ArrayList<Customer> alCustomer = CustomerDao.getAllCustomers();
-			
-			RequestDispatcher rd = request.getRequestDispatcher("Customer_list.jsp");
-			request.setAttribute("al", alCustomer);
-			rd.forward(request, response);
+			RequestDispatcher rd = request.getRequestDispatcher("Admin_login.jsp");
+			rd.forward(request, response);			
 		} 
 		catch (ServletException e)
 		{

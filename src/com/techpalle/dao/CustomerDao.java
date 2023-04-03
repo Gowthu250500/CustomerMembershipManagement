@@ -3,6 +3,7 @@ package com.techpalle.dao;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.techpalle.model.Admin;
 import com.techpalle.model.Customer;
 
 public class CustomerDao 
@@ -21,6 +22,7 @@ public class CustomerDao
 	private static final String customerEditQry = "select * from customer where id=?";
 	private static final String customerUpdateQry = "update customer set name=?, email=?, mobile=? where id=?";
 	private static final String customerDeleteQry = "delete from customer where id=?";
+	
 	
 	public static void deleteCustomer(int id)
 	{
